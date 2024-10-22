@@ -6159,6 +6159,7 @@ function HawkLib:Window(Win)
 				local description;
 				local stroke;
 				local volume;
+				local Auto_Open;
 
 				if not isfolder(writeinto) then
 					makefolder(writeinto)
@@ -6168,6 +6169,8 @@ function HawkLib:Window(Win)
 				for i, v in next, Expander do
 					if string.lower(i) == "name" then
 						name = v
+					elseif string.lower(i) == "name" then
+						Auto_Open = v
 					elseif string.lower(i) == "filename" then
 						filename  = v
 					elseif string.lower(i) == "checkfile" then
@@ -6455,6 +6458,54 @@ function HawkLib:Window(Win)
 					TweenInfo.new(.2, Enum.EasingStyle.Quad),
 					{CanvasSize = UDim2.new(0, 0, 0, UIListLayout_4.AbsoluteContentSize.Y)}
 				):Play()
+				if Auto_Open then
+					ImageFrame.Visible = true
+					ImageFrame:TweenSize(
+						UDim2.new(0, 391, 0, 100),
+						Enum.EasingDirection.Out,
+						Enum.EasingStyle.Quart,
+						0.1,
+						true
+					)
+					activate()
+					TweenService:Create(
+						UIStroke,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{Transparency = 0}
+					):Play()
+					TweenService:Create(
+						ButtonTitle,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextTransparency = 0}
+					):Play()
+					for i, v in pairs(ImageListing:GetChildren()) do
+						if v.Name == "ButtonText" then
+							TweenService:Create(
+								v,
+								TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+								{TextTransparency = 0}
+							):Play()	
+						end
+					end
+					TweenService:Create(
+						Arrow,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{Rotation = 180}
+					):Play()
+					TweenService:Create(
+						Page,
+						TweenInfo.new(.2, Enum.EasingStyle.Quad),
+						{CanvasSize = UDim2.new(0, 0, 0, UIListLayout_4.AbsoluteContentSize.Y)}
+					):Play()
+					repeat
+						wait()
+						TweenService:Create(
+							Page,
+							TweenInfo.new(.2, Enum.EasingStyle.Quad),
+							{CanvasSize = UDim2.new(0, 0, 0, UIListLayout_4.AbsoluteContentSize.Y)}
+						):Play()
+					until ImageFrame.Size == UDim2.new(0, 391, 0, 100)
+				end
 				ImageButton.MouseButton1Click:Connect(
 					function()
 						if ImageToggled == false then
